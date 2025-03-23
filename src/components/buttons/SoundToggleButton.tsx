@@ -1,3 +1,5 @@
+"use client"
+
 import { usePreferences } from '@/store/usePreferences';
 import { Button } from '../ui/button';
 import { Volume2, VolumeX } from 'lucide-react';
