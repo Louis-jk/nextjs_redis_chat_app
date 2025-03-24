@@ -1,18 +1,8 @@
-export interface Message {
-	id: number;
-	senderId: string;
-	content: string;
-	messageType: "text" | "image";
-}
+import { User } from '@/types/user.type';
+import { Message } from '@/types/message.type';
 
-export interface User {
-	id: string;
-	name: string;
-	email: string;
-	image: string;
-}
 
-export const USERS = [
+export const USERS: User[] = [
 	{
 		id: "2",
 		image: "/avatars/user2.png",
@@ -39,7 +29,7 @@ export const USERS = [
 	},
 ];
 
-export const messages = [
+export const MESSAGES: Message[] = [
 	{
 		id: 1,
 		senderId: USERS[0].id,
@@ -100,4 +90,4 @@ export const messages = [
 		content: "Bye",
 		messageType: "text",
 	},
-] as Message[];
+];
