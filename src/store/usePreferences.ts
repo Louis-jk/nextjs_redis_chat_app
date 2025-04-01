@@ -1,11 +1,11 @@
 import { create } from "zustand";
 
-interface Preferences {
+type PreferencesState = {
   soundEnabled: boolean;
   setSoundEnabled: (soundEnabled: boolean) => void;
 }
 
-export const usePreferences = create<Preferences>((set) => ({
+export const usePreferences = create<PreferencesState>((set) => ({
   soundEnabled: true,
   setSoundEnabled: (soundEnabled: boolean) => set({ soundEnabled }),
 }));
