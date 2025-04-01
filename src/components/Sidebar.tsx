@@ -1,6 +1,5 @@
 "use client";
 
-import { USERS } from '@/db/dummy';
 import { ScrollArea } from './ui/scroll-area';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
@@ -9,24 +8,21 @@ import { cn } from '@/lib/utils';
 import useSound from 'use-sound';
 import { usePreferences } from '@/store/usePreferences';
 import { LogOut } from 'lucide-react';
-import { useState } from 'react';
 import { User } from '@/types/user.type';
 import { LogoutLink } from '@kinde-oss/kinde-auth-nextjs/components';
 import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
+import { useSelectedUser } from '@/store/useSelectedUser';
 
 interface SidebarProps {
     isCollapsed: boolean;
     users: User[];
 }
 
-export default function Sidebar({ isCollapsed, users }: SidebarProps) {
-
-    const [selectedUser, setSelectedUser] = useState<User | null>(null);
+export default function Sidebar({ isCollapsed, users }: SidebarProps) {    
     const [playClickSound] = useSound("/sounds/mouse-click.mp3");
 	const { soundEnabled } = usePreferences();
-
 	const { user } = useKindeBrowserClient();
-
+	const { selectedUser, setSelectedUser } = useSelectedUser();
     return (
         <div className="group relative flex flex-col h-full gap-4 p-2 data-[collapsed=true]:p-2 max-h-full overflow-auto bg-background">
            {!isCollapsed && (
