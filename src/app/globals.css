@@ -140,3 +140,7 @@
     background-color: var(--background);
   }
 }
+
+.bg-noise {
+  background-image: url('/svg/noise.svg');  
+}
