@@ -2,6 +2,9 @@
 
 <img width="1713" alt="image" src="https://github.com/user-attachments/assets/afbe3767-6ff3-48db-a347-0289a5c9b18d" />
 
+![image](https://github.com/user-attachments/assets/52744356-222e-411e-a756-e8e9b146bb6c)
+
+
 ## Getting Started
 
 First, run the development server:
