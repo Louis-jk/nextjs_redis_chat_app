@@ -11,17 +11,21 @@ import { usePreferences } from '@/store/usePreferences';
 import { LogOut } from 'lucide-react';
 import { useState } from 'react';
 import { User } from '@/types/user.type';
-
+import { LogoutLink } from '@kinde-oss/kinde-auth-nextjs/components';
+import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
 
 interface SidebarProps {
     isCollapsed: boolean;
+    users: User[];
 }
 
-export default function Sidebar({ isCollapsed }: SidebarProps) {
+export default function Sidebar({ isCollapsed, users }: SidebarProps) {
 
     const [selectedUser, setSelectedUser] = useState<User | null>(null);
     const [playClickSound] = useSound("/sounds/mouse-click.mp3");
 	const { soundEnabled } = usePreferences();
+
+	const { user } = useKindeBrowserClient();
 
     return (
         <div className="group relative flex flex-col h-full gap-4 p-2 data-[collapsed=true]:p-2 max-h-full overflow-auto bg-background">
@@ -34,7 +38,7 @@ export default function Sidebar({ isCollapsed }: SidebarProps) {
            )}
 
             <ScrollArea className='gap-2 px-2 group-[[data-collapsed=true]]:justify-center group-[[data-collapsed=true]]:px-2'>
-				{USERS.map((user, idx) =>
+				{users.map((user, idx) =>
 					isCollapsed ? (
 						<TooltipProvider key={idx}>
 							<Tooltip delayDuration={0}>
@@ -99,16 +103,18 @@ export default function Sidebar({ isCollapsed }: SidebarProps) {
                 {!isCollapsed && (
                   <div className="hidden md:flex gap-2 items-center">
                     <Avatar className="flex justify-center items-center border-solid border-2 border-white size-12">
-                      <AvatarImage src={"/images/user-placeholder.png"} alt="avatar" referrerPolicy="no-referrer" className='rounded-full object-contain' />                    
+                      <AvatarImage src={user?.picture || "/user-placeholder.png"} alt="avatar" referrerPolicy="no-referrer" className='rounded-full object-contain' />                    
                       <AvatarFallback>
-                        {USERS[0].name[0]}
+                        {user?.given_name}
                       </AvatarFallback>
                     </Avatar>
-                    <p className="font-bold">{"John Doe"}</p>
+                    <p className="font-bold">{user?.given_name} {user?.family_name}</p>
                   </div>
                 )}
                 <div className="flex">
-                    <LogOut className='size-5' cursor="pointer" />
+					<LogoutLink>
+                    	<LogOut className='size-5' cursor="pointer" />
+					</LogoutLink>
                 </div>
               </div>
             </div>
