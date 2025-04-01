@@ -1,6 +1,7 @@
 "use server"
 
 import redis from '@/lib/db';
+import { Message } from '@/types/message.type';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 
 type SendMessageActionArgs = {
@@ -49,4 +50,17 @@ export async function sendMessageAction({content, messageType, receiverId}: Send
     })
 
     return {success: true, conversationId, messageId}        
+}
+
+export async function getMessages(selectedUserId: string, currentUserId: string) {
+    const conversationId = `conversation:${[selectedUserId, currentUserId].sort().join(":")}`;
+    const messageIds = await redis.zrange(`${conversationId}:messages`, 0, -1);
+
+    if(messageIds.length === 0) return [];
+
+    const pipeline = redis.pipeline();
+    messageIds.forEach((messageId) => pipeline.hgetall(messageId as string));
+    const messages = await pipeline.exec() as Message[];
+
+    return messages;
 }

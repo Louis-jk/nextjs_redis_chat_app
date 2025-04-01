@@ -24,7 +24,7 @@ export default function Sidebar({ isCollapsed, users }: SidebarProps) {
 	const { user } = useKindeBrowserClient();
 	const { selectedUser, setSelectedUser } = useSelectedUser();
     return (
-        <div className="group relative flex flex-col h-full gap-4 p-2 data-[collapsed=true]:p-2 max-h-full overflow-auto bg-background">
+        <div className="group relative flex flex-col h-full gap-4 p-2 data-[collapsed=true]:p-2 max-h-full overflow-auto bg-background" onClick={() => setSelectedUser(null)}>
            {!isCollapsed && (
             <div className="flex justify-between p-2 items-center">
                 <div className="flex gap-2 items-center text-2xl">
@@ -33,7 +33,7 @@ export default function Sidebar({ isCollapsed, users }: SidebarProps) {
             </div>
            )}
 
-            <ScrollArea className='gap-2 px-2 group-[[data-collapsed=true]]:justify-center group-[[data-collapsed=true]]:px-2'>
+            <ScrollArea className='gap-2 px-2 group-[[data-collapsed=true]]:justify-center group-[[data-collapsed=true]]:px-2' onClick={(e) => e.stopPropagation()}>
 				{users.map((user, idx) =>
 					isCollapsed ? (
 						<TooltipProvider key={idx}>
@@ -94,7 +94,7 @@ export default function Sidebar({ isCollapsed, users }: SidebarProps) {
 			</ScrollArea>
 
             {/* LOGOUT SECTION */}
-            <div className='mt-auto'>
+            <div className='mt-auto' onClick={(e) => e.stopPropagation()}>
               <div className="flex justify-between items-center gap-2 md:px-6 py-2">
                 {!isCollapsed && (
                   <div className="hidden md:flex gap-2 items-center">
