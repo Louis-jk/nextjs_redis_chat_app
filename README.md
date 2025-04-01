@@ -2,7 +2,8 @@
 
 <img width="1713" alt="image" src="https://github.com/user-attachments/assets/afbe3767-6ff3-48db-a347-0289a5c9b18d" />
 
-![image](https://github.com/user-attachments/assets/52744356-222e-411e-a756-e8e9b146bb6c)
+![image](https://github.com/user-attachments/assets/6a15de98-6a3f-4b8a-8dbe-bc65f03046ad)
+
 
 
 ## Getting Started
