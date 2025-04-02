@@ -11,6 +11,9 @@ import { usePreferences } from '@/store/usePreferences';
 import { useMutation } from "@tanstack/react-query";
 import { sendMessageAction } from "@/actions/message.action";
 import { useSelectedUser } from "@/store/useSelectedUser";
+import { CldUploadWidget, CloudinaryUploadWidgetInfo } from "next-cloudinary";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
+import Image from 'next/image';
 
 const ChatBottomBar = () => {
     const [message, setMessage] = useState('');
@@ -21,6 +24,7 @@ const ChatBottomBar = () => {
     const [playSound2] = useSound("/sounds/keystroke2.mp3");
     const [playSound3] = useSound("/sounds/keystroke3.mp3");
     const [playSound4] = useSound("/sounds/keystroke4.mp3");
+    const [imageUrl, setImageUrl] = useState('');
 
     const playSoundFunctions = [playSound1, playSound2, playSound3, playSound4];
 
@@ -70,8 +74,31 @@ const ChatBottomBar = () => {
         })
     }
 
-    return <div className="p-2 flex justify-between w-full items-center gap-2">
-        {!message.trim() && <ImageIcon size={20} className="cursor-pointer text-muted-foreground" />}
+    return <div className="p-2 flex justify-between w-full items-center gap-2">        
+        {!message.trim() && (
+            <CldUploadWidget 
+                signatureEndpoint="/api/sign-cloudinary-params" 
+                onSuccess={(result, {widget}) => {
+                        setImageUrl((result.info as CloudinaryUploadWidgetInfo).secure_url);
+                        widget.close();               
+                }}>
+            {({ open }) => {
+              return (                
+                 <ImageIcon size={20} className="cursor-pointer text-muted-foreground" onClick={() => open()} />
+              );
+            }}
+          </CldUploadWidget>
+        )}
+
+        <Dialog>
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle>Image Preview</DialogTitle>
+                </DialogHeader>
+                <Image src={imageUrl} alt="Uploaded Image" width={100} height={100} />
+            </DialogContent>
+        </Dialog>
+
         <AnimatePresence>
             <motion.div 
                 key="chat-input"
