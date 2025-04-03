@@ -12,7 +12,7 @@ import { useMutation } from "@tanstack/react-query";
 import { sendMessageAction } from "@/actions/message.action";
 import { useSelectedUser } from "@/store/useSelectedUser";
 import { CldUploadWidget, CloudinaryUploadWidgetInfo } from "next-cloudinary";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '../ui/dialog';
 import Image from 'next/image';
 
 const ChatBottomBar = () => {
@@ -90,12 +90,27 @@ const ChatBottomBar = () => {
           </CldUploadWidget>
         )}
 
-        <Dialog>
+        <Dialog open={!!imageUrl}>
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>Image Preview</DialogTitle>
                 </DialogHeader>
-                <Image src={imageUrl} alt="Uploaded Image" width={100} height={100} />
+                <div className="flex justify-center items-center relative h-96 w-full mx-auto">
+                    {imageUrl && (
+                        <Image src={imageUrl} alt="Uploaded Image" fill className="object-contain" />
+                    )}
+                </div>
+                <DialogFooter>
+                    <Button type="submit" onClick={() => {
+                        if(!selectedUser) return;
+                        sendMessage({
+                            content: imageUrl,
+                            messageType: "image",
+                            receiverId: selectedUser.id
+                        })
+                        setImageUrl('');
+                    }}>Send</Button>                  
+                </DialogFooter>
             </DialogContent>
         </Dialog>
 
