@@ -14,13 +14,16 @@ async function getUsers(): Promise<User[]> {
     const [nextCursor, keys] = await redis.scan(cursor, {match: "user:*", type: "hash", count: 100})
     cursor = nextCursor;
     userKeys.push(...keys);
-  } while (cursor !== "0")
-    // user: 123 user: 456 user: 789
+  } while (cursor !== "0")    
 
     const {getUser} = getKindeServerSession();
     const currentUser = await getUser();
 
     const pipeline = redis.pipeline();
+
+    if (userKeys.length === 0) {
+      return [];
+     }
 
     userKeys.forEach((key) => pipeline.hgetall(key));
     const results = await pipeline.exec() as User[];

@@ -3,7 +3,7 @@
 import { Image as ImageIcon, Loader, SendHorizontal, ThumbsUp } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Textarea } from "../ui/textarea";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import EmojiPicker from "./EmojiPicker";
 import { Button } from '../ui/button';
 import useSound from 'use-sound';
@@ -14,16 +14,25 @@ import { useSelectedUser } from "@/store/useSelectedUser";
 import { CldUploadWidget, CloudinaryUploadWidgetInfo } from "next-cloudinary";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '../ui/dialog';
 import Image from 'next/image';
+import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
+import { pusherClient } from "@/lib/pusher";
+import { Message } from '@/types/message.type';
+import { useQueryClient } from "@tanstack/react-query";
 
 const ChatBottomBar = () => {
     const [message, setMessage] = useState('');
     const textAreaRef = useRef<HTMLTextAreaElement>(null);    
-    const { soundEnabled } = usePreferences();
+    
     const {selectedUser} = useSelectedUser();
+    const {user: currentUser} = useKindeBrowserClient();
+    const { soundEnabled } = usePreferences();    
+    const queryClient = useQueryClient();
+    
     const [playSound1] = useSound("/sounds/keystroke1.mp3");
     const [playSound2] = useSound("/sounds/keystroke2.mp3");
     const [playSound3] = useSound("/sounds/keystroke3.mp3");
     const [playSound4] = useSound("/sounds/keystroke4.mp3");
+    
     const [imageUrl, setImageUrl] = useState('');
 
     const playSoundFunctions = [playSound1, playSound2, playSound3, playSound4];
@@ -73,6 +82,27 @@ const ChatBottomBar = () => {
             receiverId: selectedUser.id,
         })
     }
+
+    useEffect(() => {
+        if(!currentUser?.id || !selectedUser?.id) return;
+
+        const channelName = `${currentUser.id}__${selectedUser.id}`.split('__').sort().join('__');
+        const channel = pusherClient.subscribe(channelName);
+
+        const handleNewMessage = (data: {message: Message}) => {
+            queryClient.setQueryData(['messages', selectedUser.id], (oldMessages: Message[]) => {
+                return [...oldMessages, data.message];
+            })
+        }
+
+        channel.bind("newMessage", handleNewMessage);
+
+        return () => {
+            channel.unbind("newMessage", handleNewMessage);
+            pusherClient.unsubscribe(channelName);
+        }
+    }, [currentUser?.id, selectedUser?.id, queryClient])
+
 
     return <div className="p-2 flex justify-between w-full items-center gap-2">        
         {!message.trim() && (

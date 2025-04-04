@@ -37,11 +37,7 @@ const MessageList = () => {
 	return (
         <div ref={messageContainerRef} className="w-full overflow-y-auto overflow-x-hidden h-full flex flex-col">        
             <AnimatePresence>
-                {!isMessagesLoading && messages?.filter(message => 
-                    message !== null && 
-                    message.content && 
-                    (message.messageType === 'text' || message.messageType === 'image')
-                ).map((message, idx) => (
+                {!isMessagesLoading && messages?.map((message, idx) => (
                     <motion.div 
                         key={`${message.id}-${idx}`} 
                         layout 

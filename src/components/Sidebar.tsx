@@ -50,7 +50,7 @@ export default function Sidebar({ isCollapsed, users }: SidebarProps) {
 									>
 										<Avatar className='flex justify-center items-center border-solid border-2 border-white size-12 my-3'>
                                             <AvatarImage
-                                                src={user.image || "/user-placeholder.png"}
+                                                src={user.image || "/images/user-placeholder.png"}
                                                 alt={"User image"}
                                                 className='rounded-full object-contain'
                                             />
@@ -79,7 +79,7 @@ export default function Sidebar({ isCollapsed, users }: SidebarProps) {
 						>
 							<Avatar className='flex justify-center items-center border-solid border-2 border-white size-12'>
 								<AvatarImage
-									src={user.image || "/user-placeholder.png"}
+									src={user.image || "/images/user-placeholder.png"}
 									alt={"User image"}
 									className='rounded-full object-contain'
 								/>
@@ -99,7 +99,7 @@ export default function Sidebar({ isCollapsed, users }: SidebarProps) {
                 {!isCollapsed && (
                   <div className="hidden md:flex gap-2 items-center">
                     <Avatar className="flex justify-center items-center border-solid border-2 border-white size-12">
-                      <AvatarImage src={user?.picture || "/user-placeholder.png"} alt="avatar" referrerPolicy="no-referrer" className='rounded-full object-contain' />                    
+                      <AvatarImage src={user?.picture || "/images/user-placeholder.png"} alt="avatar" referrerPolicy="no-referrer" className='rounded-full object-contain' />                    
                       <AvatarFallback>
                         {user?.given_name}
                       </AvatarFallback>
